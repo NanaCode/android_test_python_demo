@@ -43,8 +43,10 @@ class Controller(object):
     # 单次测试过程
     def test_process(self):
         self.app.launch_app()
+        time.sleep(5)
         elapsed_time = self.app.get_launched_time()
         self.app.stop_app()
+        time.sleep(3)
         current_time = self.get_current_time()
         self.all_data.append(current_time, elapsed_time)
 
