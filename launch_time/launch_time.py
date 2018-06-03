@@ -1,4 +1,7 @@
 # _*_ coding: utf-8 _*_
+import csv
+import time
+
 __author__ = 'Nana'
 __date__ = '2018/5/31 22:22'
 
@@ -30,12 +33,44 @@ class App(object):
             return self.start_time
 
 
+# 控制类
 class Controller(object):
+    def __init__(self, count):
+        self.app = App()
+        self.counter = count
+        self.all_data = [("timestamp", "elapsedtime")]
+
+    # 单次测试过程
+    def test_process(self):
+        self.app.launch_app()
+        elapsed_time = self.app.get_launched_time()
+        self.app.stop_app()
+        current_time = self.get_current_time()
+        self.all_data.append(current_time, elapsed_time)
+
+    # 多次执行测试过程
     def run(self):
-        pass
+        while self.counter > 0:
+            self.test_process()
+            self.counter = self.counter - 1
 
-    def collect_all_data(self):
-        pass
+    # 获取当前时间戳
+    def get_current_time(self):
+        current_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+        return current_time
 
+    # def collect_all_data(self):
+    #     pass
+
+    # 数据的存储
     def save_data_to_csv(self):
-        pass
+        csv_file = file("starttime.csv", "wb")
+        writer = csv.writer(csv_file)
+        writer.writerows(self.all_data)
+        csv_file.close()
+
+
+if __name__ == '__main__':
+    controller = Controller(10)
+    controller.run()
+    controller.save_data_to_csv()
